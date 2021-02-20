@@ -1,11 +1,12 @@
+#
+
 # 使用说明
 解压本压缩包，在 *.py* 文件对应的目录下打开终端，依次执行
 ~~~
 pip install numpy
 pip install pygame
 python rpg.py
-~~~ 
-
+~~~
 # 玩法说明
  *a* *d* ：左右移动
 
