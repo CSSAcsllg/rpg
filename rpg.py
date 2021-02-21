@@ -185,7 +185,8 @@ class Player(pygame.sprite.Sprite):
         super().__init__()
         self.image = pygame.image.load("Images/Player/Player_Sprite_R.png")
         self.rect = self.image.get_rect()
-
+        self.imagemask = pygame.image.load("Images/Player/Player_Attackmask.png")
+        
         # Position and direction
         self.vx = 0
         self.pos = vec((340, 240))
@@ -293,8 +294,9 @@ class Player(pygame.sprite.Sprite):
         elif self.direction == "LEFT":
             self.correction()
             self.image = attack_ani_L[self.attack_frame]
-        #修正了攻击距离的问题
-        self.rect =  self.image.get_rect()
+            
+        # 修正攻击距离问题
+        self.mask = pygame.mask.from_surface(self.imagemask)
             # Update the current attack frame
         self.attack_frame += 1
 
@@ -319,12 +321,14 @@ class Player(pygame.sprite.Sprite):
             self.vel.y = -12
 
     def correction(self):
-        # Function is used to correct an error
-        # with character position on left attack frames
+        #Function is used to correct an error
+        #with character position on left attack frames
         if self.attack_frame == 1:
             self.pos.x -= 20
         if self.attack_frame == 10:
             self.pos.x += 20
+        
+        # 修正攻击距离问题
 
     def player_hit(self):
         if self.cooldown == False and self.immuned == False:
@@ -379,8 +383,11 @@ class Enemy(pygame.sprite.Sprite):
 
     def update(self):
         # Checks for collision with the Player
-        hits = pygame.sprite.spritecollide(self, Playergroup, False)
-
+        # from player
+        hits = pygame.sprite.spritecollide(self, Playergroup, False, pygame.sprite.collide_mask)
+        # from enemy
+        hurts = pygame.sprite.spritecollide(self, Playergroup, False)
+        
         # Activates upon either of the two expressions being true
         if hits and player.attacking == True:
 
@@ -410,7 +417,11 @@ class Enemy(pygame.sprite.Sprite):
 
         # If collision has occured and player not attacking, call the "hit" func.
         elif hits and player.attacking == False:
+            pass
+        if hurts and player.attacking == True:
             player.player_hit()
+        else:
+            pass
 
     def render(self):
         # Displayed the enemy on screen
