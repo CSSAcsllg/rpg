@@ -293,7 +293,8 @@ class Player(pygame.sprite.Sprite):
         elif self.direction == "LEFT":
             self.correction()
             self.image = attack_ani_L[self.attack_frame]
-
+        #修正了攻击距离的问题
+        self.rect =  self.image.get_rect()
             # Update the current attack frame
         self.attack_frame += 1
 
